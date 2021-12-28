@@ -7,9 +7,12 @@ NEWS_ENDPOINT = "https://newsapi.org/v2/everything"
 stock_api_key = 'FJTIZV81C783NPZD'
 news_api_key = "32902feee24b41fbbc9d5fe47a159605"
 
+Twilio_SID = "ACdd079257318b0fbe0277341b15f95c26"
+Twilio_Auth = "6f937382f856b91c25a767d88a29a02a"
+
 import requests
-
-
+from twilio.rest import Client
+ 
 
 stock_params = {
     "function" : "TIME_SERIES_DAILY",
@@ -41,15 +44,23 @@ if diff_percent > 1:
     news_response = requests.get(NEWS_ENDPOINT, new_params)
     articales = news_response.json()['articles']
     three_articales = articales[:3]
-    print(three_articales)
     
+    
+    articales_formatted = [f"Headline :{article ['title']}. \nBrief : {article ['description']}" for article in three_articales]
+    print(articales_formatted)
+    client = Client(Twilio_SID, Twilio_Auth)
 
-    ## STEP 3: Use twilio.com/docs/sms/quickstart/python
-    #to send a separate message with each article's title and description to your phone number. 
+    for article in articales_formatted:
+        message = client.messages.create(
+        to="+97433476222", 
+        from_="+12542523157",
+        body=article)
 
-#TODO 8. - Create a new list of the first 3 article's headline and description using list comprehension.
+
+
 
 #TODO 9. - Send each article as a separate message via Twilio. 
+
 
 
 
